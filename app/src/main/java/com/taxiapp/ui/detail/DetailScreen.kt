@@ -11,6 +11,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -26,6 +27,7 @@ import com.taxiapp.routing.Screen
 import com.taxiapp.ui.theme.TaxiAppTheme
 import com.taxiapp.ui.theme.yellow
 import com.taxiapp.ui.theme.white
+import com.taxiapp.utils.GradientButton
 import com.taxiapp.utils.RoundedButton
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
@@ -130,21 +132,84 @@ fun DetailScreen(navController: NavController) {
                         modifier = Modifier
                             .padding(vertical = 5.dp, horizontal = 10.dp)
                     )
-                    Column(
-                        modifier = Modifier.fillMaxSize().padding(bottom = 20.dp),
-                        verticalArrangement = Arrangement.Bottom
+                    Text(
+                        "Taxi Type:",
+                        fontSize = 14.sp,
+                        color = Color.Black,
+                        modifier = Modifier
+                            .padding(vertical = 5.dp, horizontal = 10.dp)
+                    )
+                    Text(
+                        "Indica  --  100/- per hour",
+                        fontSize = 14.sp,
+                        color = Color.Black,
+                        modifier = Modifier
+                            .padding(vertical = 5.dp, horizontal = 10.dp)
+                    )
+                    Text(
+                        "Swift  --  110/- per hour",
+                        fontSize = 14.sp,
+                        color = Color.Black,
+                        modifier = Modifier
+                            .padding(vertical = 5.dp, horizontal = 10.dp)
+                    )
+                    Text(
+                        "Dzire  --  120/- per hour",
+                        fontSize = 14.sp,
+                        color = Color.Black,
+                        modifier = Modifier
+                            .padding(vertical = 5.dp, horizontal = 10.dp)
+                    )
+                    Text(
+                        "Etios  --  150/- per hour",
+                        fontSize = 14.sp,
+                        color = Color.Black,
+                        modifier = Modifier
+                            .padding(vertical = 5.dp, horizontal = 10.dp)
+                    )
+                    Text(
+                        "Xylo  --  180/- per hour",
+                        fontSize = 14.sp,
+                        color = Color.Black,
+                        modifier = Modifier
+                            .padding(vertical = 5.dp, horizontal = 10.dp)
+                    )
+                    Text(
+                        "Ertiga  --  200/- per hour",
+                        fontSize = 14.sp,
+                        color = Color.Black,
+                        modifier = Modifier
+                            .padding(vertical = 5.dp, horizontal = 10.dp)
+                    )
+                    Text(
+                        "Etios  --  220/- per hour",
+                        fontSize = 14.sp,
+                        color = Color.Black,
+                        modifier = Modifier
+                            .padding(vertical = 5.dp, horizontal = 10.dp)
+                    )
+                    Text(
+                        "Amaze --  350/- per hour",
+                        fontSize = 14.sp,
+                        color = Color.Black,
+                        modifier = Modifier
+                            .padding(vertical = 5.dp, horizontal = 10.dp)
+                    )
+                    Row(
+                        modifier = Modifier
                     ) {
-                        Box(Modifier.padding(15.dp)) {
-                            RoundedButton(
-                                text = "Send Enquiry",
-                                textColor = white,
-                                onClick = {
-                                    navController.navigate(Screen.EnquiryScreen.route)
-                                }
-                            )
-                        }
-                        Spacer(modifier = Modifier.height(10.dp))
+                        GradientButton(
+                            onClick = {
+                                navController.navigate(Screen.EnquiryScreen.route)
+                            },
+                            modifier = Modifier.padding(vertical = 5.dp).fillMaxWidth(),
+                            textColor = white,
+                            isEnabled = true,
+                            gradient = Brush.horizontalGradient(listOf(yellow, yellow)),
+                            text = "Send Enquiry"
+                        )
                     }
+
                 }
 
             }

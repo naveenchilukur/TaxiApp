@@ -26,17 +26,22 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.taxiapp.R
 import com.taxiapp.routing.Screen
+import com.taxiapp.ui.taxi_preference.TaxiPreference
 import com.taxiapp.ui.theme.TaxiAppTheme
 import com.taxiapp.ui.theme.yellow
 import com.taxiapp.ui.theme.white
 import com.taxiapp.utils.OutlineFormField
 import com.taxiapp.utils.RoundedButton
+import com.taxiapp.utils.isValidEmail
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun LoginScreen(navController: NavController) {
     val context = LocalContext.current
+    val preference = remember {
+        TaxiPreference(context)
+    }
     val scrollState = rememberScrollState()
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -44,19 +49,25 @@ fun LoginScreen(navController: NavController) {
     TaxiAppTheme {
         Scaffold {
             Column(
-                modifier = Modifier.fillMaxSize().background(yellow).padding(10.dp)
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(yellow)
+                    .padding(10.dp)
             ) {
                 Spacer(modifier = Modifier.height(60.dp))
                 Image(
                     painter = painterResource(id = R.drawable.ic_taxi),
                     contentDescription = "",
                     contentScale = ContentScale.Fit,
-                    modifier = Modifier.width(120.dp).height(120.dp).align(Alignment.CenterHorizontally)
+                    modifier = Modifier
+                        .width(120.dp)
+                        .height(120.dp)
+                        .align(Alignment.CenterHorizontally)
                 )
                 Spacer(modifier = Modifier.height(10.dp))
                 Text(
-                    "Sign in to Get Started",
-                    modifier =Modifier.fillMaxWidth(),
+                    "Login via Customer or Taxi Provider",
+                    modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center,
                     style = TextStyle(color = white)
                 )
@@ -64,7 +75,7 @@ fun LoginScreen(navController: NavController) {
                 Spacer(modifier = Modifier.height(30.dp))
                 Text(
                     "Email",
-                    modifier =Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth(),
                     style = TextStyle(color = white)
                 )
                 Spacer(modifier = Modifier.height(10.dp))
@@ -80,7 +91,7 @@ fun LoginScreen(navController: NavController) {
                 Spacer(modifier = Modifier.height(20.dp))
                 Text(
                     "Password",
-                    modifier =Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth(),
                     style = TextStyle(color = white)
                 )
                 Spacer(modifier = Modifier.height(10.dp))
@@ -103,64 +114,76 @@ fun LoginScreen(navController: NavController) {
                         textColor = yellow,
                         onClick = {
                             if (email.isNotEmpty()) {
-                                if (password.isNotEmpty()) {
-                                    db.collection("users")
-                                        .get()
-                                        .addOnSuccessListener { result ->
-                                            if (result.isEmpty) {
-                                                Toast.makeText(
-                                                    context,
-                                                    "Invalid user.",
-                                                    Toast.LENGTH_LONG
-                                                ).show()
-                                                return@addOnSuccessListener
-                                            } else {
-                                                for (document in result) {
-                                                    Log.e(
-                                                        "TAG",
-                                                        "setOnClick: $document"
-                                                    )
-                                                    if (document.data["email"] == email &&
-                                                        document.data["password"] == password
-                                                    ) {
-                                                        Toast.makeText(
-                                                            context,
-                                                            "Login successfully.",
-                                                            Toast.LENGTH_LONG
-                                                        ).show()
-                                                        navController.navigate(
-                                                            Screen.MainScreen.route
+                                if (!isValidEmail(email.trim())) {
+                                    if (password.isNotEmpty()) {
+                                        db.collection("users")
+                                            .get()
+                                            .addOnSuccessListener { result ->
+                                                if (result.isEmpty) {
+                                                    Toast.makeText(
+                                                        context,
+                                                        "Invalid user.",
+                                                        Toast.LENGTH_LONG
+                                                    ).show()
+                                                    return@addOnSuccessListener
+                                                } else {
+                                                    for (document in result) {
+                                                        Log.e(
+                                                            "TAG",
+                                                            "setOnClick: $document"
+                                                        )
+                                                        if (document.data["email"] == email &&
+                                                            document.data["password"] == password
                                                         ) {
-                                                            popUpTo(Screen.LoginScreen.route) {
-                                                                inclusive = true
+                                                            preference.saveData(
+                                                                "isLogin",
+                                                                true
+                                                            )
+                                                            Toast.makeText(
+                                                                context,
+                                                                "Login successfully.",
+                                                                Toast.LENGTH_LONG
+                                                            ).show()
+                                                            navController.navigate(
+                                                                Screen.MainScreen.route
+                                                            ) {
+                                                                popUpTo(Screen.LoginScreen.route) {
+                                                                    inclusive = true
+                                                                }
                                                             }
+                                                        } else {
+                                                            Toast.makeText(
+                                                                context,
+                                                                "Invalid user.",
+                                                                Toast.LENGTH_LONG
+                                                            ).show()
+                                                            return@addOnSuccessListener
                                                         }
-                                                    } else {
-                                                        Toast.makeText(
-                                                            context,
-                                                            "Invalid user.",
-                                                            Toast.LENGTH_LONG
-                                                        ).show()
-                                                        return@addOnSuccessListener
                                                     }
                                                 }
-                                            }
 
-                                        }
-                                        .addOnFailureListener { exception ->
-                                            Toast.makeText(
-                                                context,
-                                                exception.message.toString(),
-                                                Toast.LENGTH_LONG
-                                            ).show()
-                                        }
+                                            }
+                                            .addOnFailureListener { exception ->
+                                                Toast.makeText(
+                                                    context,
+                                                    exception.message.toString(),
+                                                    Toast.LENGTH_LONG
+                                                ).show()
+                                            }
+                                    } else {
+                                        Toast.makeText(
+                                            context,
+                                            "Please enter password.",
+                                            Toast.LENGTH_LONG
+                                        ).show()
+
+                                    }
                                 } else {
                                     Toast.makeText(
                                         context,
-                                        "Please enter password.",
+                                        "Please enter valid email.",
                                         Toast.LENGTH_LONG
                                     ).show()
-
                                 }
                             } else {
                                 Toast.makeText(
@@ -174,11 +197,11 @@ fun LoginScreen(navController: NavController) {
                 }
 
 
-
-
             }
             Column(
-                modifier = Modifier.fillMaxSize().padding(bottom = 20.dp),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(bottom = 20.dp),
                 verticalArrangement = Arrangement.Bottom
             ) {
                 Row(
