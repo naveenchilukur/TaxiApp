@@ -34,7 +34,7 @@ import com.taxiapp.ui.theme.TaxiAppTheme
 import com.taxiapp.ui.theme.yellow
 import com.taxiapp.ui.theme.white
 import com.taxiapp.utils.GradientButton
-import com.taxiapp.utils.OutlineFormField
+import com.taxiapp.utils.TaxiFormField
 import com.taxiapp.utils.RoundedButton
 import com.taxiapp.utils.isValidEmail
 
@@ -92,7 +92,7 @@ fun EnquiryScreen(navController: NavController) {
                 SmallTopAppBar(
                     title = {
                         Text(
-                            text = "Enquiry", color = Color.White,
+                            text = "Book", color = Color.White,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(10.dp),
@@ -129,7 +129,7 @@ fun EnquiryScreen(navController: NavController) {
                         style = TextStyle(color = white)
                     )
                     Spacer(modifier = Modifier.height(10.dp))
-                    OutlineFormField(
+                    TaxiFormField(
                         value = name,
                         onValueChange = { text ->
                             name = text
@@ -145,7 +145,7 @@ fun EnquiryScreen(navController: NavController) {
                         style = TextStyle(color = white)
                     )
                     Spacer(modifier = Modifier.height(10.dp))
-                    OutlineFormField(
+                    TaxiFormField(
                         value = email,
                         onValueChange = { text ->
                             email = text
@@ -161,7 +161,7 @@ fun EnquiryScreen(navController: NavController) {
                         style = TextStyle(color = white)
                     )
                     Spacer(modifier = Modifier.height(10.dp))
-                    OutlineFormField(
+                    TaxiFormField(
                         value = mobile,
                         onValueChange = { text ->
                             mobile = text
@@ -176,7 +176,7 @@ fun EnquiryScreen(navController: NavController) {
                         style = TextStyle(color = white)
                     )
                     Spacer(modifier = Modifier.height(10.dp))
-                    OutlineFormField(
+                    TaxiFormField(
                         value = message,
                         onValueChange = { text ->
                             message = text
@@ -350,7 +350,7 @@ fun EnquiryScreen(navController: NavController) {
                         style = TextStyle(color = white)
                     )
                     Spacer(modifier = Modifier.height(10.dp))
-                    OutlineFormField(
+                    TaxiFormField(
                         value = hours,
                         onValueChange = { text ->
                             hours = text
@@ -454,13 +454,16 @@ fun EnquiryScreen(navController: NavController) {
                 title = { Text(stringResource(id = R.string.app_name)) },
                 text = { Text("Successfully submitted!!!") },
                 confirmButton = {
-                    RoundedButton(
-                        text = "Ok",
-                        textColor = white,
+                    GradientButton(
                         onClick = {
                             navController.navigateUp()
                             isBooked = false
-                        }
+                        },
+                        modifier = Modifier.padding(vertical = 5.dp).fillMaxWidth(),
+                        textColor = white,
+                        isEnabled = true,
+                        gradient = Brush.horizontalGradient(listOf(yellow, yellow)),
+                        text = "Ok"
                     )
                 },
                 dismissButton = {}

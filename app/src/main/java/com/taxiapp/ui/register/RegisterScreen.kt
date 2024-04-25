@@ -32,7 +32,7 @@ import androidx.navigation.NavController
 import com.taxiapp.R
 import com.taxiapp.routing.Screen
 import com.taxiapp.ui.theme.TaxiAppTheme
-import com.taxiapp.utils.OutlineFormField
+import com.taxiapp.utils.TaxiFormField
 import com.taxiapp.utils.RoundedButton
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -54,6 +54,7 @@ fun RegisterScreen(navController: NavController) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     val db = Firebase.firestore
+    var register by remember { mutableStateOf(false) }
     TaxiAppTheme {
         Scaffold {
             Column(
@@ -88,7 +89,7 @@ fun RegisterScreen(navController: NavController) {
                     style = TextStyle(color = white)
                 )
                 Spacer(modifier = Modifier.height(10.dp))
-                OutlineFormField(
+                TaxiFormField(
                     value = name,
                     onValueChange = { text ->
                         name = text
@@ -104,7 +105,7 @@ fun RegisterScreen(navController: NavController) {
                     style = TextStyle(color = white)
                 )
                 Spacer(modifier = Modifier.height(10.dp))
-                OutlineFormField(
+                TaxiFormField(
                     value = email,
                     onValueChange = { text ->
                         email = text
@@ -120,7 +121,7 @@ fun RegisterScreen(navController: NavController) {
                     style = TextStyle(color = white)
                 )
                 Spacer(modifier = Modifier.height(10.dp))
-                OutlineFormField(
+                TaxiFormField(
                     value = password,
                     onValueChange = { text ->
                         password = text
@@ -140,11 +141,12 @@ fun RegisterScreen(navController: NavController) {
                         onClick = {
                             if (name.isNotEmpty()) {
                                 if (email.isNotEmpty()) {
-                                    if (!isValidEmail(email.trim())) {
+                                    if (!isValidEmail(email)) {
                                         if (password.isNotEmpty()) {
+                                            register = true
                                             val user = hashMapOf(
                                                 "name" to name,
-                                                "email" to email,
+                                                "email" to email.lowercase(),
                                                 "password" to password
                                             )
                                             db.collection("users")
@@ -170,17 +172,20 @@ fun RegisterScreen(navController: NavController) {
                                                                         inclusive = true
                                                                     }
                                                                 }
+                                                                register = false
                                                             }
                                                             .addOnFailureListener { e ->
+
                                                                 Toast.makeText(
                                                                     context,
                                                                     e.message.toString(),
                                                                     Toast.LENGTH_SHORT
                                                                 ).show()
+                                                                register = false
                                                             }
                                                     } else {
                                                         for (document in result) {
-                                                            if (document.data["email"] == email &&
+                                                            if (document.data["email"] == email.lowercase() &&
                                                                 document.data["password"] == password
                                                             ) {
                                                                 Toast.makeText(
@@ -188,6 +193,7 @@ fun RegisterScreen(navController: NavController) {
                                                                     "Already exists.",
                                                                     Toast.LENGTH_SHORT
                                                                 ).show()
+                                                                register = false
                                                                 return@addOnSuccessListener
                                                             } else {
                                                                 db.collection("users")
@@ -209,6 +215,7 @@ fun RegisterScreen(navController: NavController) {
                                                                                 inclusive = true
                                                                             }
                                                                         }
+                                                                        register = false
                                                                     }
                                                                     .addOnFailureListener { e ->
                                                                         Toast.makeText(
@@ -216,6 +223,7 @@ fun RegisterScreen(navController: NavController) {
                                                                             e.message.toString(),
                                                                             Toast.LENGTH_SHORT
                                                                         ).show()
+                                                                        register = false
                                                                     }
                                                             }
                                                         }
@@ -227,6 +235,7 @@ fun RegisterScreen(navController: NavController) {
                                                         exception.message.toString(),
                                                         Toast.LENGTH_SHORT
                                                     ).show()
+                                                    register = false
                                                 }
                                         } else {
                                             Toast.makeText(
@@ -239,7 +248,7 @@ fun RegisterScreen(navController: NavController) {
                                     } else {
                                         Toast.makeText(
                                             context,
-                                            "Please enter valid email.",
+                                            "Please enter email.",
                                             Toast.LENGTH_LONG
                                         ).show()
 
@@ -247,7 +256,7 @@ fun RegisterScreen(navController: NavController) {
                                 } else {
                                     Toast.makeText(
                                         context,
-                                        "Please enter email.",
+                                        "Please enter valid email.",
                                         Toast.LENGTH_LONG
                                     ).show()
 
@@ -296,7 +305,21 @@ fun RegisterScreen(navController: NavController) {
                 }
                 Spacer(modifier = Modifier.height(10.dp))
             }
-
+            if (register) {
+                Dialog(
+                    onDismissRequest = { },
+                    DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
+                ) {
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier
+                            .size(100.dp)
+                            .background(white, shape = RoundedCornerShape(8.dp))
+                    ) {
+                        CircularProgressIndicator(color = yellow)
+                    }
+                }
+            }
 
         }
     }

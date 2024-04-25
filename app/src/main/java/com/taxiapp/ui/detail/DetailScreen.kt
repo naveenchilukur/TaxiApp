@@ -206,7 +206,7 @@ fun DetailScreen(navController: NavController) {
                             textColor = white,
                             isEnabled = true,
                             gradient = Brush.horizontalGradient(listOf(yellow, yellow)),
-                            text = "Send Enquiry"
+                            text = "Book Now"
                         )
                     }
 

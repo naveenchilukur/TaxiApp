@@ -62,7 +62,7 @@ fun MainScreen(navController: NavController) {
                 fromAddress = "Jaipur",
                 toAddress = "Mumbai",
                 image = "",
-                name = "Test Tour & Travels",
+                name = "Mumbai Tour & Travels",
                 mobile = "9898989898"
             )
         )
@@ -71,7 +71,7 @@ fun MainScreen(navController: NavController) {
                 fromAddress = "Jaipur",
                 toAddress = "Mumbai",
                 image = "",
-                name = "Test Tour & Travels",
+                name = "Jaipur Tour & Travels",
                 mobile = "9898989898"
             )
         )
@@ -80,7 +80,7 @@ fun MainScreen(navController: NavController) {
                 fromAddress = "Jaipur",
                 toAddress = "Mumbai",
                 image = "",
-                name = "Test Tour & Travels",
+                name = "Delhi Express",
                 mobile = "9898989898"
             )
         )
@@ -89,7 +89,7 @@ fun MainScreen(navController: NavController) {
                 fromAddress = "Jaipur",
                 toAddress = "Mumbai",
                 image = "",
-                name = "Test Tour & Travels",
+                name = "Jammu Travels",
                 mobile = "9898989898"
             )
         )
@@ -98,7 +98,7 @@ fun MainScreen(navController: NavController) {
                 fromAddress = "Jaipur",
                 toAddress = "Mumbai",
                 image = "",
-                name = "Test Tour & Travels",
+                name = "Mumbai Tour & Travels",
                 mobile = "9898989898"
             )
         )
@@ -107,7 +107,7 @@ fun MainScreen(navController: NavController) {
                 fromAddress = "Jaipur",
                 toAddress = "Mumbai",
                 image = "",
-                name = "Test Tour & Travels",
+                name = "Jaipur Tour & Travels",
                 mobile = "9898989898"
             )
         )
@@ -116,7 +116,7 @@ fun MainScreen(navController: NavController) {
                 fromAddress = "Jaipur",
                 toAddress = "Mumbai",
                 image = "",
-                name = "Test Tour & Travels",
+                name = "Delhi Express",
                 mobile = "9898989898"
             )
         )
@@ -125,7 +125,17 @@ fun MainScreen(navController: NavController) {
                 fromAddress = "Jaipur",
                 toAddress = "Mumbai",
                 image = "",
-                name = "Test Tour & Travels",
+                name = "Jammu Travels",
+                mobile = "9898989898"
+            )
+        )
+
+        add(
+            TaxiModel(
+                fromAddress = "Jaipur",
+                toAddress = "Mumbai",
+                image = "",
+                name = "Mumbai Tour & Travels",
                 mobile = "9898989898"
             )
         )
@@ -134,7 +144,7 @@ fun MainScreen(navController: NavController) {
                 fromAddress = "Jaipur",
                 toAddress = "Mumbai",
                 image = "",
-                name = "Test Tour & Travels",
+                name = "Jaipur Tour & Travels",
                 mobile = "9898989898"
             )
         )
@@ -143,7 +153,7 @@ fun MainScreen(navController: NavController) {
                 fromAddress = "Jaipur",
                 toAddress = "Mumbai",
                 image = "",
-                name = "Test Tour & Travels",
+                name = "Delhi Express",
                 mobile = "9898989898"
             )
         )
@@ -152,19 +162,11 @@ fun MainScreen(navController: NavController) {
                 fromAddress = "Jaipur",
                 toAddress = "Mumbai",
                 image = "",
-                name = "Test Tour & Travels",
+                name = "Jammu Travels",
                 mobile = "9898989898"
             )
         )
-        add(
-            TaxiModel(
-                fromAddress = "Jaipur",
-                toAddress = "Mumbai",
-                image = "",
-                name = "Test Tour & Travels",
-                mobile = "9898989898"
-            )
-        )
+
     }
     /*val call: Call<Response<String>> = apiService.yourData
     call.enqueue(object : Callback<Response<String>> {
