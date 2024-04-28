@@ -8,6 +8,7 @@ import com.taxiapp.ui.detail.DetailScreen
 import com.taxiapp.ui.enquiry.EnquiryScreen
 import com.taxiapp.ui.login.LoginScreen
 import com.taxiapp.ui.main.MainScreen
+import com.taxiapp.ui.paymentScreen.PaymentScreen
 import com.taxiapp.ui.register.RegisterScreen
 import com.taxiapp.ui.splash.SplashScreen
 
@@ -34,8 +35,17 @@ fun Navigation() {
         composable(route = Screen.EnquiryScreen.route) {
             EnquiryScreen(navController = navController)
         }
-        composable(route = Screen.Detail.route) {
-            DetailScreen(navController = navController)
+        composable(route = Screen.Payment.route) {
+            PaymentScreen(navController = navController)
+        }
+        composable(route = Screen.Detail.route+ "/{name}"+"/{mobile}") {
+            val name = it.arguments?.getString("name")
+            val mobile = it.arguments?.getString("mobile")
+            if (name != null) {
+                if (mobile != null) {
+                    DetailScreen(navController = navController, name = name, mobile = mobile)
+                }
+            }
         }
     }
 

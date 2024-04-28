@@ -372,7 +372,7 @@ fun EnquiryScreen(navController: NavController) {
                                                     if (textTypeDropDown.isNotEmpty()) {
                                                         if (wayDropDown.isNotEmpty()) {
                                                             if (hours.isNotEmpty()) {
-                                                                isBooked = true
+                                                                navController.navigate(Screen.Payment.route)
                                                             } else {
                                                                 Toast.makeText(
                                                                     context,

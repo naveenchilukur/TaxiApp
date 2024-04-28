@@ -269,7 +269,7 @@ fun MainScreen(navController: NavController) {
                             ) {
                                 GradientButton(
                                     onClick = {
-                                        navController.navigate(Screen.Detail.route)
+                                        navController.navigate(Screen.Detail.route + "/${taxiModel.name}" + "/${taxiModel.mobile}")
                                     },
                                     modifier = Modifier.padding(vertical = 5.dp).fillMaxWidth(),
                                     textColor = white,

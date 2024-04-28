@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
+import com.google.firebase.auth.FirebaseAuth
 import com.taxiapp.R
 import com.taxiapp.routing.Screen
 import com.taxiapp.ui.theme.TaxiAppTheme
@@ -53,7 +54,7 @@ fun RegisterScreen(navController: NavController) {
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    val db = Firebase.firestore
+    val firebaseAuth = FirebaseAuth.getInstance()
     var register by remember { mutableStateOf(false) }
     TaxiAppTheme {
         Scaffold {
@@ -144,98 +145,36 @@ fun RegisterScreen(navController: NavController) {
                                     if (!isValidEmail(email)) {
                                         if (password.isNotEmpty()) {
                                             register = true
-                                            val user = hashMapOf(
-                                                "name" to name,
-                                                "email" to email.lowercase(),
-                                                "password" to password
+                                            firebaseAuth.createUserWithEmailAndPassword(
+                                                email.lowercase(),
+                                                password
                                             )
-                                            db.collection("users")
-                                                .get()
-                                                .addOnSuccessListener { result ->
-                                                    if (result.isEmpty) {
-                                                        db.collection("users")
-                                                            .add(user)
-                                                            .addOnSuccessListener { documentReference ->
-                                                                preference.saveData(
-                                                                    "isLogin",
-                                                                    true
-                                                                )
-                                                                Toast.makeText(
-                                                                    context,
-                                                                    "Register successfully.",
-                                                                    Toast.LENGTH_SHORT
-                                                                ).show()
-                                                                navController.navigate(
-                                                                    Screen.MainScreen.route
-                                                                ) {
-                                                                    popUpTo(Screen.LoginScreen.route) {
-                                                                        inclusive = true
-                                                                    }
-                                                                }
-                                                                register = false
-                                                            }
-                                                            .addOnFailureListener { e ->
-
-                                                                Toast.makeText(
-                                                                    context,
-                                                                    e.message.toString(),
-                                                                    Toast.LENGTH_SHORT
-                                                                ).show()
-                                                                register = false
-                                                            }
-                                                    } else {
-                                                        for (document in result) {
-                                                            if (document.data["email"] == email.lowercase() &&
-                                                                document.data["password"] == password
-                                                            ) {
-                                                                Toast.makeText(
-                                                                    context,
-                                                                    "Already exists.",
-                                                                    Toast.LENGTH_SHORT
-                                                                ).show()
-                                                                register = false
-                                                                return@addOnSuccessListener
-                                                            } else {
-                                                                db.collection("users")
-                                                                    .add(user)
-                                                                    .addOnSuccessListener { documentReference ->
-                                                                        preference.saveData(
-                                                                            "isLogin",
-                                                                            true
-                                                                        )
-                                                                        Toast.makeText(
-                                                                            context,
-                                                                            "Register successfully.",
-                                                                            Toast.LENGTH_SHORT
-                                                                        ).show()
-                                                                        navController.navigate(
-                                                                            Screen.MainScreen.route
-                                                                        ) {
-                                                                            popUpTo(Screen.RegisterScreen.route) {
-                                                                                inclusive = true
-                                                                            }
-                                                                        }
-                                                                        register = false
-                                                                    }
-                                                                    .addOnFailureListener { e ->
-                                                                        Toast.makeText(
-                                                                            context,
-                                                                            e.message.toString(),
-                                                                            Toast.LENGTH_SHORT
-                                                                        ).show()
-                                                                        register = false
-                                                                    }
+                                                .addOnCompleteListener { task ->
+                                                    if (task.isSuccessful) {
+                                                        preference.saveData(
+                                                            "isLogin", true
+                                                        )
+                                                        Toast.makeText(
+                                                            context,
+                                                            "Register successfully.",
+                                                            Toast.LENGTH_SHORT
+                                                        ).show()
+                                                        navController.navigate(
+                                                            Screen.MainScreen.route
+                                                        ) {
+                                                            popUpTo(Screen.RegisterScreen.route) {
+                                                                inclusive = true
                                                             }
                                                         }
+                                                        register = false
+                                                    } else {
+                                                        Toast.makeText(
+                                                            context,
+                                                            task.exception?.message.toString(),
+                                                            Toast.LENGTH_SHORT
+                                                        ).show()
+                                                        register = false
                                                     }
-                                                }
-                                                .addOnFailureListener { exception ->
-                                                    Toast.makeText(
-                                                        context,
-                                                        exception.message.toString(),
-                                                        Toast.LENGTH_SHORT
-                                                    ).show()
-                                                    register = false
                                                 }
                                         } else {
                                             Toast.makeText(

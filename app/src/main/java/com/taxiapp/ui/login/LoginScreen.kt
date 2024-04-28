@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.taxiapp.R
@@ -48,7 +49,7 @@ fun LoginScreen(navController: NavController) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var login by remember { mutableStateOf(false) }
-    val db = Firebase.firestore
+    val firebaseAuth = FirebaseAuth.getInstance()
     TaxiAppTheme {
         Scaffold {
             Column(
@@ -120,70 +121,29 @@ fun LoginScreen(navController: NavController) {
                                 if (!isValidEmail(email.toString())) {
                                     if (password.isNotEmpty()) {
                                         login = true
-                                        db.collection("users")
-                                            .get()
-                                            .addOnSuccessListener { result ->
-                                                if (result.isEmpty) {
-
+                                        firebaseAuth.signInWithEmailAndPassword(email.lowercase(), password)
+                                            .addOnCompleteListener { task ->
+                                                if (task.isSuccessful) {
+                                                    preference.saveData(
+                                                        "isLogin", true
+                                                    )
                                                     Toast.makeText(
-                                                        context,
-                                                        "Invalid user.",
-                                                        Toast.LENGTH_LONG
+                                                        context, "Login successfully.", Toast.LENGTH_SHORT
                                                     ).show()
-                                                    login = false
-                                                    return@addOnSuccessListener
-                                                } else {
-                                                    for (document in result) {
-                                                        if (document.data["email"] == email.lowercase() &&
-                                                            document.data["password"] == password
-                                                        ) {
-                                                            preference.saveData(
-                                                                "isLogin",
-                                                                true
-                                                            )
-                                                            Toast.makeText(
-                                                                context,
-                                                                "Login successfully.",
-                                                                Toast.LENGTH_LONG
-                                                            ).show()
-                                                            navController.navigate(
-                                                                Screen.MainScreen.route
-                                                            ) {
-                                                                popUpTo(Screen.LoginScreen.route) {
-                                                                    inclusive = true
-                                                                }
-                                                            }
-                                                            login = false
-                                                        } else if (document.data["email"] == email.lowercase() &&
-                                                            document.data["password"] != password
-                                                        ) {
-                                                            Toast.makeText(
-                                                                context,
-                                                                "Invalid password.",
-                                                                Toast.LENGTH_LONG
-                                                            ).show()
-                                                            login = false
-                                                            return@addOnSuccessListener
-                                                        } else {
-                                                            Toast.makeText(
-                                                                context,
-                                                                "Invalid user.",
-                                                                Toast.LENGTH_LONG
-                                                            ).show()
-                                                            login = false
-                                                            return@addOnSuccessListener
+                                                    navController.navigate(
+                                                        Screen.MainScreen.route
+                                                    ) {
+                                                        popUpTo(Screen.LoginScreen.route) {
+                                                            inclusive = true
                                                         }
                                                     }
+                                                    login = false
+                                                } else {
+                                                    Toast.makeText(
+                                                        context, task.exception?.message.toString(), Toast.LENGTH_SHORT
+                                                    ).show()
+                                                    login = false
                                                 }
-
-                                            }
-                                            .addOnFailureListener { exception ->
-                                                Toast.makeText(
-                                                    context,
-                                                    exception.message.toString(),
-                                                    Toast.LENGTH_LONG
-                                                ).show()
-                                                login = false
                                             }
                                     } else {
                                         Toast.makeText(

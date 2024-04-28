@@ -33,7 +33,7 @@ import com.taxiapp.utils.RoundedButton
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun DetailScreen(navController: NavController) {
+fun DetailScreen(navController: NavController, name:String,mobile:String) {
     val context = LocalContext.current
     TaxiAppTheme {
         Scaffold {
@@ -82,14 +82,14 @@ fun DetailScreen(navController: NavController) {
                         )
                         Column {
                             Text(
-                                "Test Tour & Travels",
+                                name,
                                 fontSize = 14.sp,
                                 color = Color.Black,
                                 modifier = Modifier
                                     .padding(vertical = 5.dp, horizontal = 10.dp)
                             )
                             Text(
-                                "9859985998",
+                                mobile,
                                 fontSize = 14.sp,
                                 color = Color.Black,
                                 modifier = Modifier
